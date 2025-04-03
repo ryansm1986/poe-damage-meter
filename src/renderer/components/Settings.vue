@@ -26,10 +26,10 @@
         min="50"
         max="2000"
         step="50"
-        :value="settingsStore.settings.updateInterval" 
+        :value="settingsStore.settings.captureInterval" 
         @input="onIntervalChange($event.target.value)"
       />
-      <span>{{ settingsStore.settings.updateInterval }} ms</span>
+      <span>{{ settingsStore.settings.captureInterval }} ms</span>
     </div>
 
     <div class="settings-section overlay-settings">
@@ -57,6 +57,19 @@
             {{ isEditingOverlay2 ? 'Finish Editing Overlay 2' : 'Edit Overlay 2 Position/Size' }}
         </button>
         <span v-if="isEditingOverlay2" class="edit-mode-indicator"> (Editing...)</span>
+      </div>
+      <div class="setting-item" v-if="localOverlay2Enabled">
+        <label for="overlay2AnimationStyle">Animation Style:</label>
+        <select id="overlay2AnimationStyle" v-model="localOverlay2AnimationStyle">
+          <option value="floatUp">Float Up</option>
+          <option value="floatUpSpread">Float Up & Spread</option>
+          <option value="floatBounce">Float Up & Bounce</option>
+          <option value="floatDown">Float Down</option>
+          <option value="floatDownSpread">Float Down & Spread</option>
+          <option value="floatDownBounce">Float Down & Bounce</option>
+          <option value="pulse">Pulse & Fade</option>
+          <option value="spin">Spin & Fade</option>
+        </select>
       </div>
     </div>
 
@@ -145,6 +158,12 @@ const localOverlay2Enabled = computed({
       toggleEditOverlay(2, false); // Auto-exit edit mode
     }
   }
+});
+
+// Add computed property for animation style
+const localOverlay2AnimationStyle = computed({
+  get: () => settingsStore.overlay2AnimationStyle,
+  set: (value) => settingsStore.setOverlay2AnimationStyle(value)
 });
 
 const isEditingOverlay1 = ref(false);

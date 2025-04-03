@@ -371,7 +371,7 @@ async function processCapture() {
     isProcessing = false; 
 }
 
-async function startCaptureLoop() {
+async function startCaptureLoop(intervalOverride) {
     if (!ocrInitialized) { /* ... wait for OCR init ... */
         console.log('Waiting for OCR worker...');
         if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('update-status', 'Initializing OCR...');
@@ -384,7 +384,15 @@ async function startCaptureLoop() {
     if (!settings.region) { /* ... handle no region ... */
         if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('update-status', 'No Region'); return;
     }
-    let interval = settings.updateInterval; if (interval < 50) interval = 50;
+
+    // Use override if provided and valid, otherwise use stored value
+    let interval = intervalOverride && typeof intervalOverride === 'number' && intervalOverride >= 50
+        ? intervalOverride 
+        : settings.captureInterval;
+    
+    // Ensure interval is not below minimum
+    if (interval < 50) interval = 50; 
+
     console.log(`Starting capture loop: ${interval}ms`);
     if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('update-status', 'Running');
     processCapture(); // Run once immediately
@@ -478,17 +486,34 @@ ipcMain.handle('get-version', () => {
   return app.getVersion();
 });
 
-// Listeners for overlay enables/disables
+// Watch for setting changes that affect overlays
 store.onDidChange('overlay1Enabled', (isEnabled) => { if (isEnabled) createOverlay1Window(); else closeOverlay1Window(); });
 store.onDidChange('overlay2Enabled', (isEnabled) => { if (isEnabled) createOverlay2Window(); else closeOverlay2Window(); });
 
-// Listeners for capture loop control based on settings
-store.onDidChange('region', (newValue, oldValue) => { 
-    if (captureIntervalId) { startCaptureLoop(); } 
-    else if (!newValue && oldValue) { stopCaptureLoop(); }
+// Watch for animation style changes
+store.onDidChange('overlay2AnimationStyle', (newStyle) => {
+  if (overlay2Window && !overlay2Window.isDestroyed()) {
+    overlay2Window.webContents.send('animation-style-change', newStyle);
+    console.log('[Main Process] Sent animation style change to overlay2:', newStyle);
+  }
 });
-store.onDidChange('updateInterval', () => { 
-    if (captureIntervalId) { startCaptureLoop(); } 
+
+// Watch for capture interval changes to restart the capture loop
+store.onDidChange('captureInterval', (newInterval, oldInterval) => {
+    if (newInterval !== oldInterval) {
+        console.log(`[Main Process] Capture interval changed from ${oldInterval}ms to ${newInterval}ms.`);
+        // Restart the capture loop only if it's currently running
+        if (captureIntervalId) {
+            console.log('[Main Process] Restarting capture loop with new stored interval.');
+            stopCaptureLoop(); // Clear existing interval
+            // Use setTimeout to ensure stopCapture fully completes before restarting
+            setTimeout(() => {
+                // When restarting due to store change, DO NOT pass an override
+                // Let it read the new value from the store.
+                startCaptureLoop(); 
+            }, 50); // Small delay
+        }
+    }
 });
 
 // --- Damage Meter Core Logic IPC ---
@@ -601,7 +626,10 @@ ipcMain.handle('test-ocr', async () => {
 });
 
 // Capture Loop Control IPC from Renderer
-ipcMain.on('start-capture', startCaptureLoop);
+ipcMain.on('start-capture', (event, intervalOverride) => {
+    // Pass the intervalOverride to startCaptureLoop
+    startCaptureLoop(intervalOverride);
+});
 ipcMain.on('stop-capture', stopCaptureLoop);
 
 // --- App Initialization ---
@@ -778,4 +806,9 @@ app.on('will-quit', async () => {
         ocrWorker = null;
         ocrInitialized = false;
     }
+});
+
+// Add IPC handler for getting animation style
+ipcMain.handle('get-animation-style', () => {
+  return store.get('overlay2AnimationStyle');
 }); 

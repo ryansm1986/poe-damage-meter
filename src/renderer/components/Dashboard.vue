@@ -112,7 +112,11 @@ function toggleCapture() {
         api.stopCapture();
     } else {
         console.log('Requesting capture start...');
-        api.startCapture();
+        // Get the current interval value from the settings store
+        const currentInterval = settingsStore.settings.captureInterval;
+        console.log(`Starting capture with interval override: ${currentInterval}ms`);
+        // Pass the current value from the UI as an override
+        api.startCapture(currentInterval);
     }
 }
 

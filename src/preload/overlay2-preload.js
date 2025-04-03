@@ -11,6 +11,17 @@ contextBridge.exposeInMainWorld('overlay2API', {
 
     // Listener for edit mode changes
     onSetEditMode: (callback) => ipcRenderer.on('set-edit-mode', (_event, isEditing) => callback(isEditing)),
+    
+    // Listener for animation style changes
+    onAnimationStyleChange: (callback) => {
+        const listener = (event, style) => callback(style);
+        ipcRenderer.on('animation-style-change', listener);
+        // Return function to remove listener
+        return () => ipcRenderer.removeListener('animation-style-change', listener);
+    },
+    
+    // Get current animation style
+    getAnimationStyle: () => ipcRenderer.invoke('get-animation-style'),
 
     // Cleanup listeners
     removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel),

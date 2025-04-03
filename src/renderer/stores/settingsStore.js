@@ -26,6 +26,7 @@ export const useSettingsStore = defineStore('settings', () => {
     overlay2Enabled: false, // Default false
     overlay2Position: null, // Default null for centering logic
     overlay2Size: null,     // Default null for default size logic
+    overlay2AnimationStyle: 'floatUp', // Default animation style
     ocrWhitelist: '0123456789',
     captureInterval: 500,
     targetDisplayId: null,
@@ -35,6 +36,7 @@ export const useSettingsStore = defineStore('settings', () => {
   // Computed properties for direct access (optional but good practice)
   const overlay1Enabled = computed(() => settings.value.overlay1Enabled);
   const overlay2Enabled = computed(() => settings.value.overlay2Enabled);
+  const overlay2AnimationStyle = computed(() => settings.value.overlay2AnimationStyle);
   // ... add others as needed ...
 
   // Actions
@@ -47,6 +49,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
   function setOverlay1Enabled(enabled) { _updateSetting('overlay1Enabled', enabled); }
   function setOverlay2Enabled(enabled) { _updateSetting('overlay2Enabled', enabled); }
+  function setOverlay2AnimationStyle(style) { _updateSetting('overlay2AnimationStyle', style); }
   // ... other setters using _updateSetting or custom logic ...
   function setRegion(newRegion) { 
       settings.value.captureRegion = newRegion;
@@ -106,12 +109,14 @@ export const useSettingsStore = defineStore('settings', () => {
     isLoaded,
     overlay1Enabled, // Expose computed getter
     overlay2Enabled, // Expose computed getter
+    overlay2AnimationStyle, // Expose new computed getter
     // Expose actions
     loadSettings,
     setRegion,
     setUpdateInterval,
     setOverlay1Enabled,
     setOverlay2Enabled,
+    setOverlay2AnimationStyle, // Expose new setter
     setOverlay1Position
   };
 }); 

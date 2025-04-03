@@ -21,7 +21,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Send (One-way to Main)
   saveSettings: (settings) => ipcRenderer.send('save-settings', settings),
   resetStats: () => ipcRenderer.send('reset-stats'),
-  startCapture: () => ipcRenderer.send('start-capture'),
+  startCapture: (interval) => ipcRenderer.send('start-capture', interval),
   stopCapture: () => ipcRenderer.send('stop-capture'),
   sendStatsUpdateForOverlay: (stats) => ipcRenderer.send('stats-updated-for-overlay', stats),
   // TODO: Add send for overlay position changes
