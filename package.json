@@ -21,6 +21,7 @@
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
+    "electron-squirrel-startup": "^1.0.1",
     "electron-store": "^8.1.0",
     "jimp": "^0.22.10",
     "lodash": "^4.17.21",
@@ -34,7 +35,6 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "electron": "^29.1.5",
     "electron-builder": "^24.13.3",
-    "electron-squirrel-startup": "^1.0.1",
     "eslint": "^8.57.0",
     "vite": "^5.2.8"
   },
