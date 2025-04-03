@@ -1,0 +1,67 @@
+/* General Overlay Styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: transparent;
+    user-select: none;
+    /* This overlay body should ALWAYS be draggable like Overlay 1 */
+    -webkit-app-region: drag;
+}
+
+/* REMOVED edit mode specific drag rules */
+/*
+body.edit-mode {
+    -webkit-app-region: drag;
+}
+body.edit-mode #overlay2-container {
+    -webkit-app-region: drag;
+}
+*/
+
+/* Ensure the main content container is NOT draggable */
+#overlay2-container {
+    -webkit-app-region: no-drag;
+}
+
+#container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.floating-number {
+    position: absolute;
+    left: 50%; /* Default starting position (can be customized) */
+    top: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    font-size: 20px; /* Adjust size as needed */
+    font-weight: bold;
+    color: #f0f0f0; /* White/light grey text */
+    text-shadow: 
+        -1px -1px 0 #000,  
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000, /* Basic black outline */
+         0px 0px 4px rgba(0,0,0,0.8); /* Soft shadow */
+    white-space: nowrap;
+    pointer-events: none; /* Allow clicks to pass through */
+    opacity: 1;
+    animation: floatAndFade 1.8s ease-out forwards;
+}
+
+@keyframes floatAndFade {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, 0px);
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, 50px); /* Move downwards */
+    }
+} 

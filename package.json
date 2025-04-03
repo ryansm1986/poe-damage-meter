@@ -1,0 +1,84 @@
+{
+  "name": "poe2-damage-meter",
+  "version": "1.0.0",
+  "description": "Damage meter for Path of Exile 2 using screen capture and OCR",
+  "main": "src/main/index.js",
+  "scripts": {
+    "start": "npm run build && electron .",
+    "dev": "vite --config vite.config.js --mode development",
+    "electron:dev": "electron .",
+    "build": "vite build --config vite.config.js --mode production && electron-builder",
+    "build:vite": "vite build --config vite.config.js --mode production",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "poe2",
+    "path of exile 2",
+    "damage meter",
+    "electron",
+    "vue"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "electron-store": "^8.1.0",
+    "jimp": "^0.22.10",
+    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
+    "pinia": "^2.1.7",
+    "screenshot-desktop": "^1.15.0",
+    "tesseract.js": "^5.0.5",
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "electron": "^29.1.5",
+    "electron-builder": "^24.13.3",
+    "electron-squirrel-startup": "^1.0.1",
+    "eslint": "^8.57.0",
+    "vite": "^5.2.8"
+  },
+  "build": {
+    "appId": "com.example.poe2damagemeter",
+    "productName": "PoE2 Damage Meter",
+    "files": [
+      "dist/**/*",
+      "src/main/**/*",
+      "src/preload/**/*",
+      "src/renderer/region-selector.html",
+      "src/renderer/region-selector.css",
+      "src/renderer/region-selector.js",
+      "src/renderer/overlay1.html",
+      "src/renderer/overlay1.css",
+      "src/renderer/overlay1.js",
+      "src/renderer/components/OverlayInfo.vue",
+      "src/renderer/overlay2.html",
+      "src/renderer/overlay2.css",
+      "src/renderer/overlay2.js",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "node_modules/tesseract.js/dist/eng.traineddata.gz",
+        "to": "tessdata/eng.traineddata.gz"
+      }
+    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "release/${version}"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    }
+  }
+}

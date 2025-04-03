@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval'">
+    <title>Overlay 1</title>
+    <style>
+        /* Make html, body, and #app fill the viewport */
+        html, body, #app {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            overflow: hidden; /* Prevent scrollbars */
+            background-color: transparent;
+            color: white;
+            font-family: sans-serif;
+            font-size: 14px;
+            text-shadow: 1px 1px 2px black;
+            padding: 5px; /* Keep padding inside */
+            border: 1px solid transparent; 
+            display: flex; /* Use flex to help position content */
+            flex-direction: column;
+            -webkit-app-region: drag; 
+            user-select: none; /* Prevent text selection while dragging */
+        }
+        #app {
+           /* #app now fills body */
+        }
+        #overlay1-content {
+            /* This holds the stats. Let it size naturally */
+            display: flex;
+            flex-direction: column;
+            gap: 2px; 
+            -webkit-app-region: no-drag; /* Ensure stats area isn't draggable */
+        }
+        .stat {
+            white-space: nowrap;
+        }
+        body.edit-mode {
+            border: 1px dashed yellow;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <script type="module" src="/overlay1.js"></script>
+</body>
+</html> 

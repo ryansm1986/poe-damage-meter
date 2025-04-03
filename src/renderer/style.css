@@ -1,0 +1,14 @@
+/* Global styles */
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #1e1e1e; /* Consistent background */
+  color: #dcdcdc;
+  overflow: hidden; /* Prevent scrollbars on body */
+}
+
+#app {
+  height: 100vh;
+  width: 100vw;
+} 
